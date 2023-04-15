@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("/v1/authors")
+@RequestMapping("/api/v1/authors")
 class AuthorController(private val authorService: AuthorService) {
 
     @GetMapping

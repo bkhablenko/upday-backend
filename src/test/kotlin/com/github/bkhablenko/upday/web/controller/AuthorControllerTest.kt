@@ -27,7 +27,7 @@ class AuthorControllerTest {
     @MockBean
     private lateinit var authorService: AuthorService
 
-    @DisplayName("GET /v1/authors")
+    @DisplayName("GET /api/v1/authors")
     @Nested
     inner class GetAuthorsTest {
 
@@ -50,10 +50,10 @@ class AuthorControllerTest {
             }
         }
 
-        private fun getAuthors() = mockMvc.get("/v1/authors").andDo { print() }
+        private fun getAuthors() = mockMvc.get("/api/v1/authors").andDo { print() }
     }
 
-    @DisplayName("GET /v1/authors/{authorId}")
+    @DisplayName("GET /api/v1/authors/{authorId}")
     @Nested
     inner class GetAuthorByIdTest {
 
@@ -87,6 +87,6 @@ class AuthorControllerTest {
             }
         }
 
-        private fun getAuthorById(authorId: UUID) = mockMvc.get("/v1/authors/$authorId").andDo { print() }
+        private fun getAuthorById(authorId: UUID) = mockMvc.get("/api/v1/authors/$authorId").andDo { print() }
     }
 }

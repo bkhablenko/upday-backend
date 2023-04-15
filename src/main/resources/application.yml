@@ -27,3 +27,8 @@ spring:
   # https://www.baeldung.com/spring-open-session-in-view
   jpa:
     open-in-view: false
+
+  security:
+    user:
+      name: admin
+      password: p@55w0rd
