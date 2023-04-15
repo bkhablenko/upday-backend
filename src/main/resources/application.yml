@@ -1,3 +1,19 @@
+# Spring Boot Actuator
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /
+      exposure:
+        include: health,prometheus
+      path-mapping:
+        prometheus: metrics
+  endpoint:
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+
 spring:
   application:
     name: upday-backend
