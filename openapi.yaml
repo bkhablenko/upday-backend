@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: upday-backend
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:8080/v1
+
+tags:
+  - name: authors
+    description: Everything related to article authors.
+
+paths:
+  /authors:
+    get:
+      summary: List all authors.
+      tags:
+        - authors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorItem'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+
+  /authors/{authorId}:
+    get:
+      summary: Get author by ID.
+      tags:
+        - authors
+      parameters:
+        - $ref: '#/components/parameters/authorId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorItem'
+        '404':
+          description: Not Found
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+
+components:
+  parameters:
+    authorId:
+      name: authorId
+      in: path
+      required: true
+      description: Author ID.
+      schema:
+        $ref: '#/components/schemas/AuthorId'
+
+  schemas:
+    AuthorId:
+      type: string
+      format: uuid
+      example: e41728d0-d5cf-449c-85f7-e8c1e1047364
+    Author:
+      type: object
+      properties:
+        fullName:
+          type: string
+          example: Hunter S. Thompson
+    AuthorItem:
+      allOf:
+        - $ref: '#/components/schemas/Author'
+      properties:
+        id:
+          $ref: '#/components/schemas/AuthorId'
+
+  responses:
+    ErrorResponse:
+      description: Something went awfully wrong.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+                example: 2023-04-15T12:30:45.990Z
+              status:
+                type: integer
+                example: 500
+              error:
+                type: string
+                example: Internal Server Error
+              message:
+                type: string
+                example: Something went awfully wrong.
+              path:
+                type: string
