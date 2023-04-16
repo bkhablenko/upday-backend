@@ -7,10 +7,66 @@ servers:
   - url: http://localhost:8080/api/v1
 
 tags:
+  - name: articles
+    description: News articles.
   - name: authors
-    description: Everything related to article authors.
+    description: Article authors.
 
 paths:
+  /articles:
+    get:
+      summary: Search articles.
+      tags:
+        - articles
+      parameters:
+        - name: authorId
+          in: query
+          description: |
+            Include articles authored by the given person, including those with more than one author.
+          schema:
+            $ref: '#/components/schemas/AuthorId'
+        - name: tags
+          in: query
+          description: |
+            Include articles that have *at least one* tag from the list.
+          schema:
+            type: array
+            items:
+              type: string
+            example:
+              - health
+              - politics
+              - science
+        - name: publicationDateStart
+          in: query
+          description: |
+            Include articles published no earlier than the given date.
+          schema:
+            type: string
+            format: date
+            example: 2023-04-01
+        - name: publicationDateEndExclusive
+          in: query
+          description: |
+            Include articles published no later than the given date.
+          schema:
+            type: string
+            format: date
+            example: 2023-04-15
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArticleItem'
+        '400':
+          description: Bad Request
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+
   /authors:
     get:
       summary: List all authors.
@@ -63,6 +119,42 @@ components:
         $ref: '#/components/schemas/AuthorId'
 
   schemas:
+    ArticleId:
+      type: string
+      format: uuid
+      example: e41728d0-d5cf-449c-85f7-e8c1e1047364
+    Article:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Song of the Sausage Creature
+        description:
+          type: string
+          example: A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.
+        body:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - motorcycles
+        publicationDate:
+          type: string
+          format: date
+          example: 1995-03-01
+    ArticleItem:
+      allOf:
+        - $ref: '#/components/schemas/Article'
+      properties:
+        id:
+          $ref: '#/components/schemas/ArticleId'
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorItem'
+
     AuthorId:
       type: string
       format: uuid
@@ -103,3 +195,4 @@ components:
                 example: Something went awfully wrong.
               path:
                 type: string
+                example: /v1/api/**
