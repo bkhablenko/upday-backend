@@ -1,5 +1,6 @@
 package com.github.bkhablenko.upday.config
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 // Implement WebMvcConfigurer so @WebMvcTest includes this configuration
 @Configuration
+@ConditionalOnWebApplication
 @EnableMethodSecurity
 class WebSecurityConfig : WebMvcConfigurer {
 

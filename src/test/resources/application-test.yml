@@ -3,6 +3,8 @@ logging:
     org.springframework.test: debug
 
 spring:
+  main:
+    web-application-type: none
   test:
     database:
       replace: none
