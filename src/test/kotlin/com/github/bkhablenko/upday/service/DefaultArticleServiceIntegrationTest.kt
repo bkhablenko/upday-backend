@@ -1,5 +1,6 @@
 package com.github.bkhablenko.upday.service
 
+import com.github.bkhablenko.upday.domain.model.idList
 import com.github.bkhablenko.upday.service.model.ArticleCriteria
 import com.github.bkhablenko.upday.support.time.until
 import com.github.bkhablenko.upday.support.toUUID
@@ -41,7 +42,7 @@ class DefaultArticleServiceIntegrationTest : AbstractIntegrationTest() {
             val foundEntities = articleService.searchArticles(criteria)
 
             // Then
-            assertThat(foundEntities.map { it.id }, containsInAnyOrder(ARTICLE_1, ARTICLE_3))
+            assertThat(foundEntities.idList, containsInAnyOrder(ARTICLE_1, ARTICLE_3))
         }
 
         @Test
@@ -54,7 +55,7 @@ class DefaultArticleServiceIntegrationTest : AbstractIntegrationTest() {
             val foundEntities = articleService.searchArticles(criteria)
 
             // Then
-            assertThat(foundEntities.map { it.id }, containsInAnyOrder(ARTICLE_1, ARTICLE_2, ARTICLE_3))
+            assertThat(foundEntities.idList, containsInAnyOrder(ARTICLE_1, ARTICLE_2, ARTICLE_3))
         }
 
         @Test
@@ -68,7 +69,7 @@ class DefaultArticleServiceIntegrationTest : AbstractIntegrationTest() {
             val foundEntities = articleService.searchArticles(criteria)
 
             // Then
-            assertThat(foundEntities.map { it.id }, containsInAnyOrder(ARTICLE_1, ARTICLE_2))
+            assertThat(foundEntities.idList, containsInAnyOrder(ARTICLE_1, ARTICLE_2))
         }
 
         @Test
@@ -81,7 +82,7 @@ class DefaultArticleServiceIntegrationTest : AbstractIntegrationTest() {
             val foundEntities = articleService.searchArticles(criteria)
 
             // Then
-            assertThat(foundEntities.map { it.id }, contains(ARTICLE_3, ARTICLE_2, ARTICLE_1))
+            assertThat(foundEntities.idList, contains(ARTICLE_3, ARTICLE_2, ARTICLE_1))
         }
     }
 }

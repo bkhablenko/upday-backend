@@ -28,3 +28,5 @@ abstract class AuditedEntity {
     @Column(name = "updated_at")
     lateinit var lastModifiedDate: LocalDateTime
 }
+
+inline val <T : AuditedEntity> Iterable<T>.idList: List<UUID> get() = map { it.id }
