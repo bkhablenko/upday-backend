@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
     kotlin("jvm") version "1.8.20"
+    kotlin("kapt") version "1.8.20"
     kotlin("plugin.spring") version "1.8.20"
     kotlin("plugin.jpa") version "1.8.20"
 }
@@ -28,6 +29,12 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+
+    implementation(group = "com.querydsl", name = "querydsl-jpa", classifier = "jakarta")
+    kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jakarta")
+
+    // https://github.com/querydsl/querydsl/issues/3454
+    // kapt("com.querydsl:querydsl-kotlin-codegen")
 }
 
 tasks {
