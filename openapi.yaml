@@ -69,6 +69,43 @@ paths:
           description: Bad Request
         default:
           $ref: '#/components/responses/ErrorResponse'
+    post:
+      summary: Publish an article.
+      tags:
+        - articles
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Article'
+                - type: object
+                  properties:
+                    authors:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AuthorId'
+              required:
+                - title
+                - description
+                - body
+                - tags
+                - authors
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleItem'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        default:
+          $ref: '#/components/responses/ErrorResponse'
 
   /articles/{articleId}:
     parameters:
@@ -166,22 +203,23 @@ components:
           example: A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.
         body:
           type: string
+          example: Just some non-empty string.
         tags:
           type: array
           items:
             type: string
           example:
             - motorcycles
-        publicationDate:
-          type: string
-          format: date
-          example: 1995-03-01
     ArticleItem:
       allOf:
         - $ref: '#/components/schemas/Article'
       properties:
         id:
           $ref: '#/components/schemas/ArticleId'
+        publicationDate:
+          type: string
+          format: date
+          example: 1995-03-01
         authors:
           type: array
           items:

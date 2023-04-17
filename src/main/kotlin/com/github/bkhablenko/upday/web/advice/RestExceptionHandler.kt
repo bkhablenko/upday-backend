@@ -27,7 +27,7 @@ class RestExceptionHandler {
             status = httpStatus.value(),
             error = httpStatus.reasonPhrase,
             message = cause.message ?: "",
-            path = request.pathInfo,
+            path = request.requestURI,
         )
         return ResponseEntity(payload, httpStatus)
     }

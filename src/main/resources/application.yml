@@ -32,3 +32,5 @@ spring:
     user:
       name: admin
       password: p@55w0rd
+      roles:
+        - EDITOR

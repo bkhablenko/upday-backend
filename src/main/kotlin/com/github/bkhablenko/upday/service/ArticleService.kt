@@ -6,6 +6,8 @@ import java.util.UUID
 
 interface ArticleService {
 
+    fun createArticle(article: ArticleEntity, authors: List<UUID>): ArticleEntity
+
     fun getArticleById(articleId: UUID): ArticleEntity
 
     fun searchArticles(criteria: ArticleCriteria): List<ArticleEntity>

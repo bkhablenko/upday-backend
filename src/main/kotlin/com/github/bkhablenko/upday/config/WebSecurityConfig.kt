@@ -18,6 +18,7 @@ class WebSecurityConfig : WebMvcConfigurer {
     @Bean
     fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
         httpSecurity {
+            csrf { disable() }
             authorizeRequests {
                 authorize(anyRequest, permitAll)
             }

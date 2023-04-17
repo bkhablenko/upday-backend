@@ -2,10 +2,15 @@ package com.github.bkhablenko.upday.web.controller
 
 import com.github.bkhablenko.upday.service.ArticleService
 import com.github.bkhablenko.upday.web.model.GetArticleByIdResponse
+import com.github.bkhablenko.upday.web.model.PublishArticleRequest
+import com.github.bkhablenko.upday.web.model.PublishArticleResponse
 import com.github.bkhablenko.upday.web.model.SearchArticlesRequestParams
 import com.github.bkhablenko.upday.web.model.SearchArticlesResponse
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
@@ -13,6 +18,14 @@ import java.util.UUID
 @RestController
 @RequestMapping("/api/v1/articles")
 class ArticleController(private val articleService: ArticleService) {
+
+    @PostMapping
+    @PreAuthorize("hasRole('EDITOR')")
+    fun publishArticle(@RequestBody payload: PublishArticleRequest): PublishArticleResponse {
+        val article = articleService.createArticle(payload.toArticleEntity(), payload.authors)
+
+        return PublishArticleResponse.of(article)
+    }
 
     @GetMapping("/{articleId}")
     fun getArticleById(@PathVariable articleId: UUID): GetArticleByIdResponse {

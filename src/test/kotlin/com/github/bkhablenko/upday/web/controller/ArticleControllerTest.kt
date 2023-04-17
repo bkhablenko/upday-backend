@@ -2,6 +2,7 @@ package com.github.bkhablenko.upday.web.controller
 
 import com.github.bkhablenko.upday.domain.model.ArticleEntity
 import com.github.bkhablenko.upday.domain.model.AuthorEntity
+import com.github.bkhablenko.upday.exception.ArticleNotFoundException
 import com.github.bkhablenko.upday.service.ArticleService
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.equalTo
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockHttpServletRequestDsl
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 import java.time.LocalDate
 import java.time.Month.APRIL
 import java.time.Month.MAY
@@ -32,6 +35,21 @@ class ArticleControllerTest {
 
     @MockBean
     private lateinit var articleService: ArticleService
+
+    @DisplayName("POST /api/v1/articles")
+    @Nested
+    inner class PublishArticlesTest {
+
+        // TODO(bkhablenko): Add missing tests
+
+        private fun publishArticle(content: String) =
+            mockMvc
+                .post("/api/v1/articles") {
+                    this.content = content
+                    this.contentType = MediaType.APPLICATION_JSON
+                }
+                .andDo { print() }
+    }
 
     @DisplayName("GET /api/v1/articles/{articleId}")
     @Nested
@@ -82,9 +100,18 @@ class ArticleControllerTest {
             }
         }
 
+        @Test
+        fun `should respond with 404 Not Found if article does not exist`() {
+            val articleId = randomUUID()
+            whenever(articleService.getArticleById(articleId)) doThrow ArticleNotFoundException(articleId)
+
+            getArticleById(articleId).andExpect {
+                status { isNotFound() }
+            }
+        }
+
         private fun getArticleById(articleId: UUID) = mockMvc.get("/api/v1/articles/$articleId").andDo { print() }
     }
-
 
     @DisplayName("GET /api/v1/articles")
     @Nested
