@@ -70,6 +70,25 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 
+  /articles/{articleId}:
+    parameters:
+      - $ref: '#/components/parameters/articleId'
+    get:
+      summary: Get article by ID.
+      tags:
+        - articles
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleItem'
+        '404':
+          description: Not Found
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+
   /authors:
     get:
       summary: List all authors.
@@ -91,12 +110,12 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 
   /authors/{authorId}:
+    parameters:
+      - $ref: '#/components/parameters/authorId'
     get:
       summary: Get author by ID.
       tags:
         - authors
-      parameters:
-        - $ref: '#/components/parameters/authorId'
       responses:
         '200':
           description: OK
@@ -116,6 +135,13 @@ components:
       scheme: basic
 
   parameters:
+    articleId:
+      name: articleId
+      in: path
+      required: true
+      description: Article ID.
+      schema:
+        $ref: '#/components/schemas/ArticleId'
     authorId:
       name: authorId
       in: path

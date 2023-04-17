@@ -33,6 +33,59 @@ class ArticleControllerTest {
     @MockBean
     private lateinit var articleService: ArticleService
 
+    @DisplayName("GET /api/v1/articles/{articleId}")
+    @Nested
+    inner class GetArticleByIdTest {
+
+        @Test
+        fun `should respond with 200 OK on success`() {
+            val articleId = randomUUID()
+
+            val author = AuthorEntity(
+                fullName = "Hunter S. Thompson",
+            ).apply {
+                id = randomUUID()
+            }
+            val article = ArticleEntity(
+                title = "Song of the Sausage Creature",
+                description = "A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.",
+                body = "Just some non-empty string.",
+                tags = listOf("motorcycles"),
+                authors = listOf(author),
+            ).apply {
+                id = randomUUID()
+                LocalDate.of(2023, APRIL, 15).atStartOfDay().let {
+                    createdDate = it
+                    lastModifiedDate = it
+                }
+            }
+            whenever(articleService.getArticleById(articleId)) doReturn article
+
+            getArticleById(articleId).andExpect {
+                status { isOk() }
+                content { MediaType.APPLICATION_JSON }
+
+                with(article) {
+                    jsonPath("$.id", equalTo(id.toString()))
+                    jsonPath("$.title", equalTo(title))
+                    jsonPath("$.description", equalTo(description))
+                    jsonPath("$.body", equalTo(body))
+                    jsonPath("$.tags", containsInAnyOrder(*tags.toTypedArray()))
+                    jsonPath("$.publicationDate", equalTo("2023-04-15"))
+                }
+                jsonPath("$.authors") { isArray() }
+                jsonPath("$.authors.length()", equalTo(1))
+                with(author) {
+                    jsonPath("$.authors[0].id", equalTo(id.toString()))
+                    jsonPath("$.authors[0].fullName", equalTo(fullName))
+                }
+            }
+        }
+
+        private fun getArticleById(articleId: UUID) = mockMvc.get("/api/v1/articles/$articleId").andDo { print() }
+    }
+
+
     @DisplayName("GET /api/v1/articles")
     @Nested
     inner class SearchArticlesTest {
@@ -40,7 +93,7 @@ class ArticleControllerTest {
         @Test
         fun `should respond with 200 OK on success`() {
             val authorId = randomUUID()
-            val tags = listOf("health", "politics")
+            val tags = listOf("motorcycles")
             val publicationDateStart = LocalDate.of(2023, APRIL, 1)
             val publicationDateEndExclusive = LocalDate.of(2023, MAY, 1)
 

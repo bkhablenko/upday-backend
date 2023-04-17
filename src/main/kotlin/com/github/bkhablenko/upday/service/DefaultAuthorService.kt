@@ -3,6 +3,7 @@ package com.github.bkhablenko.upday.service
 import com.github.bkhablenko.upday.domain.model.AuthorEntity
 import com.github.bkhablenko.upday.domain.repository.AuthorRepository
 import com.github.bkhablenko.upday.exception.AuthorNotFoundException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -14,6 +15,6 @@ class DefaultAuthorService(private val authorRepository: AuthorRepository) : Aut
     }
 
     override fun getAuthorById(authorId: UUID): AuthorEntity {
-        return authorRepository.findById(authorId).orElseThrow { AuthorNotFoundException(authorId) }
+        return authorRepository.findByIdOrNull(authorId) ?: throw AuthorNotFoundException(authorId)
     }
 }

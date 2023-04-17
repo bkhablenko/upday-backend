@@ -1,6 +1,7 @@
 package com.github.bkhablenko.upday.domain.repository
 
 import com.github.bkhablenko.upday.config.JpaConfig
+import jakarta.persistence.PersistenceUnitUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
@@ -14,4 +15,7 @@ abstract class AbstractDataJpaTest {
 
     @Autowired
     protected lateinit var entityManager: TestEntityManager
+
+    protected val persistenceUnitUtil: PersistenceUnitUtil
+        get() = entityManager.entityManager.entityManagerFactory.persistenceUnitUtil
 }
