@@ -2,7 +2,6 @@ package com.github.bkhablenko.upday.web.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.bkhablenko.upday.domain.model.ArticleEntity
-import java.util.UUID
 
 data class PublishArticleRequest(
 
@@ -19,7 +18,7 @@ data class PublishArticleRequest(
     val tags: List<String>,
 
     @JsonProperty("authors")
-    val authors: List<UUID>,
+    val authors: List<Id>,
 ) {
 
     fun toArticleEntity() = ArticleEntity(title, description, body, tags)

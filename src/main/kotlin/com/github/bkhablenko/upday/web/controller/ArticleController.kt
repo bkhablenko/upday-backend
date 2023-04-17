@@ -26,7 +26,9 @@ class ArticleController(private val articleService: ArticleService) {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('EDITOR')")
     fun publishArticle(@RequestBody payload: PublishArticleRequest): PublishArticleResponse {
-        val article = articleService.createArticle(payload.toArticleEntity(), payload.authors)
+        val article = with(payload) {
+            articleService.createArticle(toArticleEntity(), authors.map { it.value })
+        }
 
         return PublishArticleResponse.of(article)
     }

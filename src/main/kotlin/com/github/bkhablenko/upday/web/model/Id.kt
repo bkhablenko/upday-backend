@@ -2,6 +2,7 @@ package com.github.bkhablenko.upday.web.model
 
 import com.chrylis.codec.base58.Base58UUID
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonCreator.Mode
 import com.fasterxml.jackson.annotation.JsonValue
 import java.util.UUID
 import java.util.UUID.randomUUID
@@ -16,7 +17,8 @@ class Id private constructor(val value: UUID, val base58Encoded: String) {
             return Id(value, base58Encoded)
         }
 
-        @JsonCreator
+        @JvmStatic
+        @JsonCreator(mode = Mode.DELEGATING)
         fun decode(base58Encoded: String): Id {
             val value = base58.decode(base58Encoded)
             return Id(value, base58Encoded)
