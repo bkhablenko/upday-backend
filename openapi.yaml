@@ -59,9 +59,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ArticleItem'
+                type: object
+                properties:
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArticleItem'
         '400':
           description: Bad Request
         default:
@@ -78,9 +81,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AuthorItem'
+                type: object
+                properties:
+                  authors:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuthorItem'
         default:
           $ref: '#/components/responses/ErrorResponse'
 

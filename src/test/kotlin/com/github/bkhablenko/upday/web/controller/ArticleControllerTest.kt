@@ -68,21 +68,21 @@ class ArticleControllerTest {
                 status { isOk() }
                 content { MediaType.APPLICATION_JSON }
 
-                jsonPath("$") { isArray() }
-                jsonPath("$.length()", equalTo(1))
+                jsonPath("$.articles") { isArray() }
+                jsonPath("$.articles.length()", equalTo(1))
                 with(article) {
-                    jsonPath("$[0].id", equalTo(id.toString()))
-                    jsonPath("$[0].title", equalTo(title))
-                    jsonPath("$[0].description", equalTo(description))
-                    jsonPath("$[0].body", equalTo(body))
-                    jsonPath("$[0].tags", containsInAnyOrder(*tags.toTypedArray()))
-                    jsonPath("$[0].publicationDate", equalTo("2023-04-15"))
+                    jsonPath("$.articles[0].id", equalTo(id.toString()))
+                    jsonPath("$.articles[0].title", equalTo(title))
+                    jsonPath("$.articles[0].description", equalTo(description))
+                    jsonPath("$.articles[0].body", equalTo(body))
+                    jsonPath("$.articles[0].tags", containsInAnyOrder(*tags.toTypedArray()))
+                    jsonPath("$.articles[0].publicationDate", equalTo("2023-04-15"))
                 }
-                jsonPath("$[0].authors") { isArray() }
-                jsonPath("$[0].authors.length()", equalTo(1))
+                jsonPath("$.articles[0].authors") { isArray() }
+                jsonPath("$.articles[0].authors.length()", equalTo(1))
                 with(author) {
-                    jsonPath("$[0].authors[0].id", equalTo(id.toString()))
-                    jsonPath("$[0].authors[0].fullName", equalTo(fullName))
+                    jsonPath("$.articles[0].authors[0].id", equalTo(id.toString()))
+                    jsonPath("$.articles[0].authors[0].fullName", equalTo(fullName))
                 }
             }
         }

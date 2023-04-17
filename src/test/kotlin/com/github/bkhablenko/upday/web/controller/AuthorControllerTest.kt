@@ -41,11 +41,11 @@ class AuthorControllerTest {
             getAuthors().andExpect {
                 status { isOk() }
                 content { contentType(MediaType.APPLICATION_JSON) }
-                jsonPath("$") { isArray() }
-                jsonPath("$.length()") { value(1) }
+                jsonPath("$.authors") { isArray() }
+                jsonPath("$.authors.length()") { value(1) }
                 with(author) {
-                    jsonPath("$[0].id") { value(id.toString()) }
-                    jsonPath("$[0].fullName") { value(fullName) }
+                    jsonPath("$.authors[0].id") { value(id.toString()) }
+                    jsonPath("$.authors[0].fullName") { value(fullName) }
                 }
             }
         }
