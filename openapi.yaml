@@ -27,6 +27,7 @@ paths:
             $ref: '#/components/schemas/AuthorId'
         - name: tags
           in: query
+          explode: false
           description: |
             Include articles that have *at least one* tag from the list.
           schema:

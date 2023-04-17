@@ -34,3 +34,12 @@ spring:
       password: p@55w0rd
       roles:
         - EDITOR
+
+---
+spring:
+  config:
+    activate:
+      on-profile: demo
+  sql:
+    init:
+      mode: always
