@@ -4,6 +4,7 @@ import com.github.bkhablenko.upday.domain.model.ArticleEntity
 import com.github.bkhablenko.upday.domain.model.AuthorEntity
 import com.github.bkhablenko.upday.exception.ArticleNotFoundException
 import com.github.bkhablenko.upday.service.ArticleService
+import com.github.bkhablenko.upday.web.model.Id
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.DisplayName
@@ -124,7 +125,9 @@ class ArticleControllerTest {
             }
         }
 
-        private fun removeArticle(articleId: UUID) = mockMvc.delete("/api/v1/articles/$articleId").andDo { print() }
+        private fun removeArticle(articleId: UUID) = removeArticle(Id.encode(articleId))
+
+        private fun removeArticle(articleId: Id) = mockMvc.delete("/api/v1/articles/$articleId").andDo { print() }
     }
 
     @DisplayName("GET /api/v1/articles/{articleId}")
@@ -147,7 +150,7 @@ class ArticleControllerTest {
                 tags = listOf("motorcycles"),
                 authors = listOf(author),
             ).apply {
-                id = randomUUID()
+                id = articleId
                 LocalDate.of(2023, APRIL, 15).atStartOfDay().let {
                     createdDate = it
                     lastModifiedDate = it
@@ -160,7 +163,7 @@ class ArticleControllerTest {
                 content { MediaType.APPLICATION_JSON }
 
                 with(article) {
-                    jsonPath("$.id", equalTo(id.toString()))
+                    jsonPath("$.id", equalTo(Id.encode(id).base58Encoded))
                     jsonPath("$.title", equalTo(title))
                     jsonPath("$.description", equalTo(description))
                     jsonPath("$.body", equalTo(body))
@@ -170,7 +173,7 @@ class ArticleControllerTest {
                 jsonPath("$.authors") { isArray() }
                 jsonPath("$.authors.length()", equalTo(1))
                 with(author) {
-                    jsonPath("$.authors[0].id", equalTo(id.toString()))
+                    jsonPath("$.authors[0].id", equalTo(Id.encode(id).base58Encoded))
                     jsonPath("$.authors[0].fullName", equalTo(fullName))
                 }
             }
@@ -186,7 +189,9 @@ class ArticleControllerTest {
             }
         }
 
-        private fun getArticleById(articleId: UUID) = mockMvc.get("/api/v1/articles/$articleId").andDo { print() }
+        private fun getArticleById(articleId: UUID) = getArticleById(Id.encode(articleId))
+
+        private fun getArticleById(articleId: Id) = mockMvc.get("/api/v1/articles/$articleId").andDo { print() }
     }
 
     @DisplayName("GET /api/v1/articles")
@@ -195,7 +200,9 @@ class ArticleControllerTest {
 
         @Test
         fun `should respond with 200 OK on success`() {
-            val authorId = randomUUID()
+            val articleId = Id.random()
+
+            val authorId = Id.random()
             val tags = listOf("motorcycles")
             val publicationDateStart = LocalDate.of(2023, APRIL, 1)
             val publicationDateEndExclusive = LocalDate.of(2023, MAY, 1)
@@ -203,7 +210,7 @@ class ArticleControllerTest {
             val author = AuthorEntity(
                 fullName = "Hunter S. Thompson",
             ).apply {
-                id = authorId
+                id = authorId.value
             }
             val article = ArticleEntity(
                 title = "Song of the Sausage Creature",
@@ -212,7 +219,7 @@ class ArticleControllerTest {
                 tags = tags,
                 authors = listOf(author),
             ).apply {
-                id = randomUUID()
+                id = articleId.value
                 LocalDate.of(2023, APRIL, 15).atStartOfDay().let {
                     createdDate = it
                     lastModifiedDate = it
@@ -227,7 +234,7 @@ class ArticleControllerTest {
                 jsonPath("$.articles") { isArray() }
                 jsonPath("$.articles.length()", equalTo(1))
                 with(article) {
-                    jsonPath("$.articles[0].id", equalTo(id.toString()))
+                    jsonPath("$.articles[0].id", equalTo(articleId.base58Encoded))
                     jsonPath("$.articles[0].title", equalTo(title))
                     jsonPath("$.articles[0].description", equalTo(description))
                     jsonPath("$.articles[0].body", equalTo(body))
@@ -237,14 +244,14 @@ class ArticleControllerTest {
                 jsonPath("$.articles[0].authors") { isArray() }
                 jsonPath("$.articles[0].authors.length()", equalTo(1))
                 with(author) {
-                    jsonPath("$.articles[0].authors[0].id", equalTo(id.toString()))
+                    jsonPath("$.articles[0].authors[0].id", equalTo(authorId.base58Encoded))
                     jsonPath("$.articles[0].authors[0].fullName", equalTo(fullName))
                 }
             }
         }
 
         private fun searchArticles(
-            authorId: UUID? = null,
+            authorId: Id? = null,
             tags: List<String>? = null,
             publicationDateStart: LocalDate? = null,
             publicationDateEndExclusive: LocalDate? = null,

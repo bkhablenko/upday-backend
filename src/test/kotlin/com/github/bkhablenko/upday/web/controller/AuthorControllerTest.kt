@@ -3,6 +3,7 @@ package com.github.bkhablenko.upday.web.controller
 import com.github.bkhablenko.upday.domain.model.AuthorEntity
 import com.github.bkhablenko.upday.exception.AuthorNotFoundException
 import com.github.bkhablenko.upday.service.AuthorService
+import com.github.bkhablenko.upday.web.model.Id
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -34,7 +35,8 @@ class AuthorControllerTest {
         @Test
         fun `should respond with 200 OK on success`() {
             // Given
-            val author = AuthorEntity("Hunter S. Thompson").apply { id = randomUUID() }
+            val authorId = Id.random()
+            val author = AuthorEntity("Hunter S. Thompson").apply { id = authorId.value }
             whenever(authorService.getAuthors()) doReturn listOf(author)
 
             // Expect
@@ -44,7 +46,7 @@ class AuthorControllerTest {
                 jsonPath("$.authors") { isArray() }
                 jsonPath("$.authors.length()") { value(1) }
                 with(author) {
-                    jsonPath("$.authors[0].id") { value(id.toString()) }
+                    jsonPath("$.authors[0].id") { value(authorId.base58Encoded) }
                     jsonPath("$.authors[0].fullName") { value(fullName) }
                 }
             }
@@ -69,7 +71,7 @@ class AuthorControllerTest {
                 status { isOk() }
                 content { contentType(MediaType.APPLICATION_JSON) }
                 with(author) {
-                    jsonPath("$.id") { value(id.toString()) }
+                    jsonPath("$.id") { value(Id.encode(id).base58Encoded) }
                     jsonPath("$.fullName") { value(fullName) }
                 }
             }
@@ -87,6 +89,8 @@ class AuthorControllerTest {
             }
         }
 
-        private fun getAuthorById(authorId: UUID) = mockMvc.get("/api/v1/authors/$authorId").andDo { print() }
+        private fun getAuthorById(authorId: UUID) = getAuthorById(Id.encode(authorId))
+
+        private fun getAuthorById(authorId: Id) = mockMvc.get("/api/v1/authors/$authorId").andDo { print() }
     }
 }

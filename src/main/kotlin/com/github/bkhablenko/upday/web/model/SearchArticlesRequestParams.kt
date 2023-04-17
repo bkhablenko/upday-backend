@@ -4,10 +4,9 @@ import com.github.bkhablenko.upday.service.model.ArticleCriteria
 import com.github.bkhablenko.upday.support.time.until
 import java.time.LocalDate
 import java.time.Month
-import java.util.UUID
 
 data class SearchArticlesRequestParams(
-    val authorId: UUID? = null,
+    val authorId: Id? = null,
     val tags: List<String>? = null,
 
     // See PostgreSQL limitations:
@@ -17,7 +16,7 @@ data class SearchArticlesRequestParams(
 ) {
 
     fun toArticleCriteria() = ArticleCriteria(
-        authorId = authorId,
+        authorId = authorId?.value,
         tags = tags,
         createdDateRange = publicationDateStart until publicationDateEndExclusive,
     )

@@ -207,8 +207,8 @@ components:
   schemas:
     ArticleId:
       type: string
-      format: uuid
-      example: e41728d0-d5cf-449c-85f7-e8c1e1047364
+      description: Base58-encoded UUID.
+      example: vsxoFbGdXoLgKJN65B4Tuu # ee8db45b-c395-481d-809b-9af50d959908
     Article:
       type: object
       properties:
@@ -244,8 +244,8 @@ components:
 
     AuthorId:
       type: string
-      format: uuid
-      example: e41728d0-d5cf-449c-85f7-e8c1e1047364
+      description: Base58-encoded UUID.
+      example: 8GXEDszDwrWFqBqTYGaJup # 3e6806e9-8605-4438-b843-b929379c48ff
     Author:
       type: object
       properties:

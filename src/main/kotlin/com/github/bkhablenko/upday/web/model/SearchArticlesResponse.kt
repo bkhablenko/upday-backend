@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.bkhablenko.upday.domain.model.ArticleEntity
 import com.github.bkhablenko.upday.domain.model.AuthorEntity
 import java.time.LocalDate
-import java.util.UUID
 
 data class SearchArticlesResponse(
 
@@ -19,7 +18,7 @@ data class SearchArticlesResponse(
     data class Article(
 
         @JsonProperty("id")
-        val id: UUID,
+        val id: Id,
 
         @JsonProperty("title")
         val title: String,
@@ -44,7 +43,7 @@ data class SearchArticlesResponse(
             fun of(articleEntity: ArticleEntity): Article {
                 return with(articleEntity) {
                     Article(
-                        id = id,
+                        id = Id.encode(id),
                         title = title,
                         description = description,
                         body = body,
@@ -59,14 +58,14 @@ data class SearchArticlesResponse(
         data class Author(
 
             @JsonProperty("id")
-            val id: UUID,
+            val id: Id,
 
             @JsonProperty("fullName")
             val fullName: String,
         ) {
 
             companion object {
-                fun of(authorEntity: AuthorEntity) = with(authorEntity) { Author(id, fullName) }
+                fun of(authorEntity: AuthorEntity) = with(authorEntity) { Author(Id.encode(id), fullName) }
             }
         }
     }

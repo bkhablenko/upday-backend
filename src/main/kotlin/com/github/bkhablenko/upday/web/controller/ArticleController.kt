@@ -2,6 +2,7 @@ package com.github.bkhablenko.upday.web.controller
 
 import com.github.bkhablenko.upday.service.ArticleService
 import com.github.bkhablenko.upday.web.model.GetArticleByIdResponse
+import com.github.bkhablenko.upday.web.model.Id
 import com.github.bkhablenko.upday.web.model.PublishArticleRequest
 import com.github.bkhablenko.upday.web.model.PublishArticleResponse
 import com.github.bkhablenko.upday.web.model.SearchArticlesRequestParams
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1/articles")
@@ -36,13 +36,13 @@ class ArticleController(private val articleService: ArticleService) {
     @DeleteMapping("/{articleId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('EDITOR')")
-    fun removeArticle(@PathVariable articleId: UUID) {
-        articleService.deleteArticleById(articleId)
+    fun removeArticle(@PathVariable articleId: Id) {
+        articleService.deleteArticleById(articleId.value)
     }
 
     @GetMapping("/{articleId}")
-    fun getArticleById(@PathVariable articleId: UUID): GetArticleByIdResponse {
-        val article = articleService.getArticleById(articleId)
+    fun getArticleById(@PathVariable articleId: Id): GetArticleByIdResponse {
+        val article = articleService.getArticleById(articleId.value)
 
         return GetArticleByIdResponse.of(article)
     }
