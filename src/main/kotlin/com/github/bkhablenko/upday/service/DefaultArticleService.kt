@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
+@Transactional
 class DefaultArticleService(
     private val articleRepository: ArticleRepository,
     private val authorRepository: AuthorRepository,
@@ -25,7 +26,6 @@ class DefaultArticleService(
         private val SORT_BY_CREATED_DATE_DESC = Sort.by(Direction.DESC, "createdDate")
     }
 
-    @Transactional
     override fun createArticle(article: ArticleEntity, authors: List<UUID>): ArticleEntity {
         return articleRepository.save(with(article) {
             ArticleEntity(
@@ -36,6 +36,12 @@ class DefaultArticleService(
                 authors = authors.map { findAuthorById(it) },
             )
         })
+    }
+
+    override fun deleteArticleById(articleId: UUID) {
+        with(articleRepository) {
+            findByIdOrNull(articleId)?.let { delete(it) } ?: throw ArticleNotFoundException(articleId)
+        }
     }
 
     override fun getArticleById(articleId: UUID): ArticleEntity {

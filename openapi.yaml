@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: upday-backend
+  title: "\uD83D\uDCF0 upday-backend"
   version: 0.1.0
 
 servers:
@@ -125,6 +125,23 @@ paths:
           description: Not Found
         default:
           $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Remove an article.
+      tags:
+        - articles
+      security:
+        - basicAuth: []
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        default:
+          $ref: '#/components/responses/ErrorResponse'
 
   /authors:
     get:
@@ -203,7 +220,7 @@ components:
           example: A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.
         body:
           type: string
-          example: Just some non-empty string.
+          example: (Just some non-empty string.)
         tags:
           type: array
           items:

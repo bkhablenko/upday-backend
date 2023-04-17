@@ -10,15 +10,20 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockHttpServletRequestDsl
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import java.time.LocalDate
@@ -42,6 +47,27 @@ class ArticleControllerTest {
 
         // TODO(bkhablenko): Add missing tests
 
+        @Test
+        fun `should respond with 401 Unauthorized on missing Authorization`() {
+            val minimalJson = """{"title":"","description":"","body":"","tags":[],"authors":[]}"""
+
+            publishArticle(minimalJson).andExpect {
+                status { isUnauthorized() }
+            }
+            verify(articleService, never()).createArticle(any(), any())
+        }
+
+        @Test
+        @WithMockUser(roles = ["USER"])
+        fun `should respond with 403 Forbidden on insufficient access`() {
+            val minimalJson = """{"title":"","description":"","body":"","tags":[],"authors":[]}"""
+
+            publishArticle(minimalJson).andExpect {
+                status { isForbidden() }
+            }
+            verify(articleService, never()).createArticle(any(), any())
+        }
+
         private fun publishArticle(content: String) =
             mockMvc
                 .post("/api/v1/articles") {
@@ -49,6 +75,56 @@ class ArticleControllerTest {
                     this.contentType = MediaType.APPLICATION_JSON
                 }
                 .andDo { print() }
+    }
+
+    @DisplayName("DELETE /api/v1/articles")
+    @Nested
+    inner class RemoveArticleTest {
+
+        @Test
+        @WithMockUser(roles = ["EDITOR"])
+        fun `should respond with 204 No Content on success`() {
+            val articleId = randomUUID()
+            doNothing().whenever(articleService).deleteArticleById(articleId)
+
+            removeArticle(articleId).andExpect {
+                status { isNoContent() }
+            }
+        }
+
+        @Test
+        fun `should respond with 401 Unauthorized on missing Authorization`() {
+            val articleId = randomUUID()
+
+            removeArticle(articleId).andExpect {
+                status { isUnauthorized() }
+            }
+            verify(articleService, never()).deleteArticleById(articleId)
+        }
+
+        @Test
+        @WithMockUser(roles = ["USER"])
+        fun `should respond with 403 Forbidden on insufficient access`() {
+            val articleId = randomUUID()
+
+            removeArticle(articleId).andExpect {
+                status { isForbidden() }
+            }
+            verify(articleService, never()).deleteArticleById(articleId)
+        }
+
+        @Test
+        @WithMockUser(roles = ["EDITOR"])
+        fun `should respond with 404 Not Found if article does not exist`() {
+            val articleId = randomUUID()
+            whenever(articleService.deleteArticleById(articleId)) doThrow ArticleNotFoundException(articleId)
+
+            removeArticle(articleId).andExpect {
+                status { isNotFound() }
+            }
+        }
+
+        private fun removeArticle(articleId: UUID) = mockMvc.delete("/api/v1/articles/$articleId").andDo { print() }
     }
 
     @DisplayName("GET /api/v1/articles/{articleId}")
@@ -67,7 +143,7 @@ class ArticleControllerTest {
             val article = ArticleEntity(
                 title = "Song of the Sausage Creature",
                 description = "A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.",
-                body = "Just some non-empty string.",
+                body = "(Just some non-empty string.)",
                 tags = listOf("motorcycles"),
                 authors = listOf(author),
             ).apply {
@@ -132,7 +208,7 @@ class ArticleControllerTest {
             val article = ArticleEntity(
                 title = "Song of the Sausage Creature",
                 description = "A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.",
-                body = "Just some non-empty string.",
+                body = "(Just some non-empty string.)",
                 tags = tags,
                 authors = listOf(author),
             ).apply {

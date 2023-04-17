@@ -19,9 +19,11 @@ import org.mockito.kotlin.check
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.same
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Optional
+import java.util.UUID
 import java.util.UUID.randomUUID
 
 @DisplayName("DefaultArticleService")
@@ -42,7 +44,7 @@ class DefaultArticleServiceTest {
             val article = ArticleEntity(
                 title = "Song of the Sausage Creature",
                 description = "A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.",
-                body = "Just some non-empty string.",
+                body = "(Just some non-empty string.)",
                 tags = listOf("motorcycles"),
             )
             whenever(articleRepository.save(any())) doAnswer { it.arguments[0] as ArticleEntity }
@@ -78,6 +80,37 @@ class DefaultArticleServiceTest {
         }
     }
 
+    @DisplayName("deleteArticle")
+    @Nested
+    inner class DeleteArticleTest {
+
+        @Test
+        fun `should delete ArticleEntity if found`() {
+            // Given
+            val articleId = randomUUID()
+            val article = emptyArticle(id = articleId)
+            whenever(articleRepository.findById(articleId)) doReturn Optional.of(article)
+
+            // When
+            articleService.deleteArticleById(articleId)
+
+            // Then
+            verify(articleRepository).delete(same(article))
+        }
+
+        @Test
+        fun `should throw exception if not found`() {
+            // Given
+            val articleId = randomUUID()
+            whenever(articleRepository.findById(articleId)) doReturn Optional.empty()
+
+            // Expect
+            assertThrows<ArticleNotFoundException> {
+                articleService.deleteArticleById(articleId)
+            }
+        }
+    }
+
     @DisplayName("getArticleById")
     @Nested
     inner class GetArticleByIdTest {
@@ -86,7 +119,7 @@ class DefaultArticleServiceTest {
         fun `should return expected ArticleEntity if found`() {
             // Given
             val articleId = randomUUID()
-            val expectedEntity = emptyArticle().apply { id = articleId }
+            val expectedEntity = emptyArticle(id = articleId)
             whenever(articleRepository.findByIdWithAuthors(articleId)) doReturn expectedEntity
 
             // Expect
@@ -106,5 +139,9 @@ class DefaultArticleServiceTest {
         }
     }
 
-    private fun emptyArticle() = ArticleEntity("", "", "", emptyList(), emptyList())
+    private fun emptyArticle(id: UUID? = null): ArticleEntity {
+        val article = ArticleEntity("", "", "", emptyList(), emptyList())
+        id?.let { article.id = it }
+        return article
+    }
 }

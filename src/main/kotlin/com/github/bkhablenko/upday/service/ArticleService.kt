@@ -8,6 +8,8 @@ interface ArticleService {
 
     fun createArticle(article: ArticleEntity, authors: List<UUID>): ArticleEntity
 
+    fun deleteArticleById(articleId: UUID)
+
     fun getArticleById(articleId: UUID): ArticleEntity
 
     fun searchArticles(criteria: ArticleCriteria): List<ArticleEntity>
