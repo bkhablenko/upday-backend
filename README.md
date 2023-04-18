@@ -90,6 +90,7 @@ This project is not perfect and could be improved in certain areas.
 - [ ] Build the app and run tests with Docker Compose
 - [ ] Split the pipeline into multiple jobs
 - [ ] Configure [parallelism](https://circleci.com/docs/parallelism-faster-jobs/)
+- [ ] Scan project dependencies for vulnerabilities
 
 ### CD
 
@@ -121,7 +122,7 @@ There's none :shrug: Consider extending [`PagingAndSortingRepository`](https://d
 
 ### Observability
 
-- [ ] Write app logs as JSON
+- [x] ~~Write app logs as JSON~~
 - [ ] Configure log collection (e.g., [Fluentd](https://www.fluentd.org/))
 - [x] ~~Expose Prometheus metrics at http://localhost:8080/metrics~~
 - [ ] Set up a [RED dashboard](https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/) with Grafana
