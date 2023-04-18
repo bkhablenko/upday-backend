@@ -12,6 +12,75 @@ TODO: Describe implemented use cases.
 
 API documentation will be available at http://localhost:8090.
 
+### Sample API Requests
+
+#### List all authors
+
+```bash
+curl -i http://localhost:8080/api/v1/authors
+```
+
+#### Get author by ID
+
+```bash
+curl -i http://localhost:8080/api/v1/authors/espFx31ogpynhXHNJ2TW72
+```
+
+#### List all articles
+
+```bash
+curl -i http://localhost:8080/api/v1/articles
+```
+
+#### Get article by ID
+
+```bash
+curl -i http://localhost:8080/api/v1/articles/5hAthjCg7vobqEgG6WDruY
+```
+
+#### Search articles
+
+By author ID:
+
+```bash
+curl -i 'http://localhost:8080/api/v1/articles?authorId=espFx31ogpynhXHNJ2TW72'
+```
+
+By topics:
+
+```bash
+curl -i 'http://localhost:8080/api/v1/articles?tags=motorcycling'
+```
+
+By date range:
+
+```bash
+curl -i "http://localhost:8080/api/v1/articles?publicationDateStart=$(date +%Y-%m-%d)"
+```
+
+#### Publish a new article
+
+```bash
+curl -i http://localhost:8080/api/v1/articles \
+  -H 'Authorization: Basic YWRtaW46cEA1NXcwcmQ=' \
+  -H 'Content-Type: application/json' \
+  --data '{
+      "title": "The Motorcycle Gangs: Losers and Outsiders",
+      "description": "Reflections and insights into the Hell'\''s Angels motorcycle club and their engagement in criminal activities.",
+      "body": "(Just some non-empty string.)",
+      "tags": ["california", "criminal"],
+      "authors": ["espFx31ogpynhXHNJ2TW72"]
+  }'
+```
+
+#### Remove an article
+
+```bash
+curl -i http://localhost:8080/api/v1/articles/5hAthjCg7vobqEgG6WDruY \
+  -H 'Authorization: Basic YWRtaW46cEA1NXcwcmQ=' \
+  -X DELETE
+```
+
 ## Notes
 
 This project is not perfect and could be improved in certain areas.
