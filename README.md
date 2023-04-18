@@ -1,4 +1,14 @@
-# upday-backend [![CircleCI](https://circleci.com/gh/bkhablenko/upday-backend.svg?style=svg)](https://circleci.com/gh/bkhablenko/upday-backend)
+# upday-backend
+
+[![CircleCI](https://circleci.com/gh/bkhablenko/upday-backend.svg?style=shield)](https://circleci.com/gh/bkhablenko/upday-backend)
+
+## How to Run
+
+```bash
+./gradlew clean build -x test && docker compose up --build
+```
+
+API documentation will be available at http://localhost:8090.
 
 ## License
 
