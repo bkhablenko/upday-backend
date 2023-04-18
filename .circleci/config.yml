@@ -63,7 +63,7 @@ jobs:
             docker compose build app --no-cache
 
 workflows:
-  build:
+  main:
     jobs:
       - build
       - docker:
