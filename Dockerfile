@@ -1,9 +1,14 @@
 FROM eclipse-temurin:17.0.6_10-jdk-alpine
 
+# https://github.com/open-telemetry/opentelemetry-java/blob/main/sdk-extensions/autoconfigure/README.md
+ENV OTEL_SERVICE_NAME=upday-backend
+ENV OTEL_METRICS_EXPORTER=none
+
 ARG JAR_FILE="./build/libs/upday-backend-0.1.0-SNAPSHOT.jar"
 
 RUN apk update && \
     apk add --no-cache curl && \
+    curl -sL https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.25.0/opentelemetry-javaagent.jar -o /opentelemetry-javaagent.jar && \
     addgroup -S upday && \
     adduser -S appuser -G upday
 
@@ -16,4 +21,4 @@ HEALTHCHECK --interval=10s --timeout=5s --start-period=30s \
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-javaagent:/opentelemetry-javaagent.jar", "-jar", "/app.jar"]

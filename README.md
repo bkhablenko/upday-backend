@@ -126,7 +126,7 @@ There's none :shrug: Consider extending [`PagingAndSortingRepository`](https://d
 - [ ] Configure log collection (e.g., [Fluentd](https://www.fluentd.org/))
 - [x] ~~Expose Prometheus metrics at http://localhost:8080/metrics~~
 - [ ] Set up a [RED dashboard](https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/) with Grafana
-- [ ] Configure tracing and trace collection
+- [x] ~~Configure tracing and trace collection~~
 
 ### Other
 

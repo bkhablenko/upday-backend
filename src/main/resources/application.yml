@@ -1,3 +1,7 @@
+logging:
+  level:
+    web: debug
+
 # Spring Boot Actuator
 management:
   endpoints:
