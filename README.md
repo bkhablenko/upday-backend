@@ -2,6 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/bkhablenko/upday-backend.svg?style=shield)](https://circleci.com/gh/bkhablenko/upday-backend)
 
+TODO: Describe implemented use cases.
+
 ## How to Run
 
 ```bash
@@ -9,6 +11,57 @@
 ```
 
 API documentation will be available at http://localhost:8090.
+
+## Notes
+
+This project is not perfect and could be improved in certain areas.
+
+### CI
+
+- [ ] Build the app and run tests with Docker Compose
+- [ ] Split the pipeline into multiple jobs
+- [ ] Configure [parallelism](https://circleci.com/docs/parallelism-faster-jobs/)
+
+### CD
+
+- [ ] Create a Helm chart to deploy the app in K8s
+
+### API Security
+
+Ideally, we'd use OAuth 2 with [Keycloak](https://www.keycloak.org/). Given the time constraint, however, some endpoints require `Basic` authentication instead.
+
+(In-memory user credentials: `admin:p@55sw0rd`.)
+
+### Rate Limiting
+
+Rate limiting is out of the scope of this project, but it's something that we'd definitely need in a production environment.
+
+### Error Handling
+
+Currently, the error response structure is inconsistent.
+
+To fix that, consider extending [`ResponseEntityExceptionHandler`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/ResponseEntityExceptionHandler.html). 
+
+### Caching
+
+Once published, news articles rarely change. It makes sense to cache them for improved performance.
+
+### Pagination
+
+There's none :shrug: Consider extending [`PagingAndSortingRepository`](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html).
+
+### Observability
+
+- [ ] Write app logs as JSON
+- [ ] Configure log collection (e.g., [Fluentd](https://www.fluentd.org/))
+- [x] ~~Expose Prometheus metrics at http://localhost:8080/metrics~~
+- [ ] Set up a [RED dashboard](https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/) with Grafana
+- [ ] Configure tracing and trace collection
+
+### Other
+
+- [ ] Configure DB connection pool
+- [ ] Validate `@RequestBody` payloads
 
 ## License
 
