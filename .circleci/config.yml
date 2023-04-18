@@ -38,12 +38,34 @@ jobs:
     steps:
       - checkout
       - restore_gradle_cache
-      - run: ./gradlew build
+      - run: ./gradlew clean build
       - store_test_results:
           path: build/test-results/test
       - save_gradle_cache
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/libs
+            - docker-compose.yml
+            - Dockerfile
+  docker:
+    docker:
+      - image: cimg/base:2023.04
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            # TODO(bkhablenko): Use a unique image tag
+
+            docker compose build app --no-cache
 
 workflows:
   build:
     jobs:
       - build
+      - docker:
+          requires:
+            - build
