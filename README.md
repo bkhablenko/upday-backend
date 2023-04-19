@@ -67,9 +67,21 @@ curl -i http://localhost:8080/api/v1/articles \
   --data '{
       "title": "The Motorcycle Gangs: Losers and Outsiders",
       "description": "Reflections and insights into the Hell'\''s Angels motorcycle club and their engagement in criminal activities.",
-      "body": "(Just some non-empty string.)",
+      "body": "Some fancy text goes here.",
       "tags": ["california", "criminal"],
       "authors": ["espFx31ogpynhXHNJ2TW72"]
+  }'
+```
+
+#### Edit an article
+
+```bash
+curl -i http://localhost:8080/api/v1/articles/5hAthjCg7vobqEgG6WDruY \
+  -X PUT \
+  -H 'Authorization: Basic YWRtaW46cEA1NXcwcmQ=' \
+  -H 'Content-Type: application/json' \
+  --data '{
+      "description": "Here goes a better description."
   }'
 ```
 

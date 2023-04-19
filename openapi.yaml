@@ -103,6 +103,10 @@ paths:
                 $ref: '#/components/schemas/ArticleItem'
         '400':
           description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
           description: Not Found
         default:
@@ -122,6 +126,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArticleItem'
+        '404':
+          description: Not Found
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      summary: Edit an article.
+      tags:
+        - articles
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Article'
+                - type: object
+                  properties:
+                    authors:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AuthorId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleItem'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
           description: Not Found
         default:
@@ -221,7 +260,7 @@ components:
           example: A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.
         body:
           type: string
-          example: (Just some non-empty string.)
+          example: Some fancy text goes here.
         tags:
           type: array
           items:

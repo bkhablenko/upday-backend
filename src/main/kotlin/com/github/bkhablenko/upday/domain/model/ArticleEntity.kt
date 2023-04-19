@@ -9,19 +9,19 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "article")
-data class ArticleEntity(
+class ArticleEntity(
 
     @Column(name = "title")
-    val title: String,
+    var title: String,
 
     @Column(name = "description")
-    val description: String,
+    var description: String,
 
     @Column(name = "body")
-    val body: String,
+    var body: String,
 
     @Column(name = "tags")
-    val tags: List<String> = ArrayList(),
+    var tags: List<String> = ArrayList(),
 
     @ManyToMany
     @JoinTable(
@@ -29,6 +29,6 @@ data class ArticleEntity(
         joinColumns = [JoinColumn(name = "article_id")],
         inverseJoinColumns = [JoinColumn(name = "author_id")],
     )
-    val authors: List<AuthorEntity> = ArrayList()
+    var authors: List<AuthorEntity> = ArrayList()
 
 ) : AuditedEntity()

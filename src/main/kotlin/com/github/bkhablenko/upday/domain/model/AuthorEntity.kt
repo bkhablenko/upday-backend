@@ -6,9 +6,9 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "author")
-data class AuthorEntity(
+class AuthorEntity(
 
     @Column(name = "full_name")
-    val fullName: String
+    var fullName: String
 
 ) : AuditedEntity()

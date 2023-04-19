@@ -7,6 +7,8 @@ import com.github.bkhablenko.upday.domain.repository.AuthorRepository
 import com.github.bkhablenko.upday.exception.ArticleNotFoundException
 import com.github.bkhablenko.upday.exception.AuthorNotFoundException
 import com.github.bkhablenko.upday.service.model.ArticleCriteria
+import com.github.bkhablenko.upday.service.model.CreateArticleModel
+import com.github.bkhablenko.upday.service.model.UpdateArticleModel
 import com.querydsl.core.types.Predicate
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.Sort.Direction
@@ -26,8 +28,8 @@ class DefaultArticleService(
         private val SORT_BY_CREATED_DATE_DESC = Sort.by(Direction.DESC, "createdDate")
     }
 
-    override fun createArticle(article: ArticleEntity, authors: List<UUID>): ArticleEntity {
-        return articleRepository.save(with(article) {
+    override fun createArticle(createModel: CreateArticleModel): ArticleEntity {
+        return articleRepository.save(with(createModel) {
             ArticleEntity(
                 title = title,
                 description = description,
@@ -36,6 +38,18 @@ class DefaultArticleService(
                 authors = authors.map { findAuthorById(it) },
             )
         })
+    }
+
+    override fun updateArticle(articleId: UUID, updateModel: UpdateArticleModel): ArticleEntity {
+        val article = articleRepository.findByIdWithAuthors(articleId) ?: throw ArticleNotFoundException(articleId)
+        with(updateModel) {
+            title?.let { article.title = it }
+            description?.let { article.description = it }
+            body?.let { article.body = it }
+            tags?.let { article.tags = it }
+            authors?.map { findAuthorById(it) }?.let { article.authors = it }
+        }
+        return articleRepository.save(article)
     }
 
     override fun deleteArticleById(articleId: UUID) {

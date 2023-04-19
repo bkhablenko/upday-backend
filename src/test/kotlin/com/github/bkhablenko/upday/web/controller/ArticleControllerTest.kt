@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 import java.time.LocalDate
 import java.time.Month.APRIL
 import java.time.Month.MAY
@@ -44,34 +45,62 @@ class ArticleControllerTest {
 
     @DisplayName("POST /api/v1/articles")
     @Nested
-    inner class PublishArticlesTest {
+    inner class PublishArticleTest {
 
         // TODO(bkhablenko): Add missing tests
 
         @Test
         fun `should respond with 401 Unauthorized on missing Authorization`() {
             val minimalJson = """{"title":"","description":"","body":"","tags":[],"authors":[]}"""
+            publishArticle(minimalJson).andExpect { status { isUnauthorized() } }
 
-            publishArticle(minimalJson).andExpect {
-                status { isUnauthorized() }
-            }
-            verify(articleService, never()).createArticle(any(), any())
+            verify(articleService, never()).createArticle(any())
         }
 
         @Test
         @WithMockUser(roles = ["USER"])
         fun `should respond with 403 Forbidden on insufficient access`() {
             val minimalJson = """{"title":"","description":"","body":"","tags":[],"authors":[]}"""
+            publishArticle(minimalJson).andExpect { status { isForbidden() } }
 
-            publishArticle(minimalJson).andExpect {
-                status { isForbidden() }
-            }
-            verify(articleService, never()).createArticle(any(), any())
+            verify(articleService, never()).createArticle(any())
         }
 
         private fun publishArticle(content: String) =
             mockMvc
                 .post("/api/v1/articles") {
+                    this.content = content
+                    this.contentType = MediaType.APPLICATION_JSON
+                }
+                .andDo { print() }
+    }
+
+    @DisplayName("PUT /api/v1/articles/{articleId}")
+    @Nested
+    inner class EditArticleTest {
+
+        // TODO(bkhablenko): Add missing tests
+
+        @Test
+        fun `should respond with 401 Unauthorized on missing Authorization`() {
+            val articleId = Id.random()
+            editArticle(articleId, "{}").andExpect { status { isUnauthorized() } }
+
+            verify(articleService, never()).createArticle(any())
+        }
+
+        @Test
+        @WithMockUser(roles = ["USER"])
+        fun `should respond with 403 Forbidden on insufficient access`() {
+            val articleId = Id.random()
+            editArticle(articleId, "{}").andExpect { status { isForbidden() } }
+
+            verify(articleService, never()).updateArticle(any(), any())
+        }
+
+        private fun editArticle(articleId: Id, content: String) =
+            mockMvc
+                .put("/api/v1/articles/$articleId") {
                     this.content = content
                     this.contentType = MediaType.APPLICATION_JSON
                 }
@@ -146,7 +175,7 @@ class ArticleControllerTest {
             val article = ArticleEntity(
                 title = "Song of the Sausage Creature",
                 description = "A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.",
-                body = "(Just some non-empty string.)",
+                body = "Some fancy text goes here.",
                 tags = listOf("motorcycles"),
                 authors = listOf(author),
             ).apply {
@@ -215,7 +244,7 @@ class ArticleControllerTest {
             val article = ArticleEntity(
                 title = "Song of the Sausage Creature",
                 description = "A wild ride on a Ducati, celebrating the thrill and culture of motorcycling.",
-                body = "(Just some non-empty string.)",
+                body = "Some fancy text goes here.",
                 tags = tags,
                 authors = listOf(author),
             ).apply {
