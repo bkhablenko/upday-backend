@@ -136,7 +136,7 @@ There's none :shrug: Consider extending [`PagingAndSortingRepository`](https://d
 
 ### Other
 
-- [ ] Configure DB connection pool
+- [x] ~~Configure DB connection pool~~
 - [x] ~~Validate `@RequestBody` payloads~~
 
 ## License

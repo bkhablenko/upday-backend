@@ -26,6 +26,10 @@ spring:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:upday}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:password}
+    hikari:
+      connection-timeout: 15000
+      leak-detection-threshold: 10000
+      maximum-pool-size: 15
 
   # Disable the warning (JpaBaseConfiguration$JpaWebConfiguration)
   # https://www.baeldung.com/spring-open-session-in-view
