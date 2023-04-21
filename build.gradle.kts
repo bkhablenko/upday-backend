@@ -30,6 +30,10 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+    // OpenTelemetry
+    implementation(platform("io.opentelemetry:opentelemetry-bom:1.25.0"))
+    implementation("io.opentelemetry:opentelemetry-api")
+
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
     runtimeOnly("org.postgresql:postgresql")
 

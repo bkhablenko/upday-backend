@@ -302,6 +302,12 @@ components:
   responses:
     ErrorResponse:
       description: Something went awfully wrong.
+      headers:
+        X-Request-Id:
+          schema:
+            type: string
+            description: Request ID.
+            example: b65f56d53190ab396d50aa0843b4d3ee
       content:
         application/json:
           schema:
