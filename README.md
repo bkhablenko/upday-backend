@@ -118,12 +118,6 @@ Ideally, we'd use OAuth 2 with [Keycloak](https://www.keycloak.org/). Given the 
 
 Rate limiting is out of the scope of this project, but it's something that we'd definitely need in a production environment.
 
-### Error Handling
-
-Currently, the error response structure is inconsistent.
-
-To fix that, consider extending [`ResponseEntityExceptionHandler`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/ResponseEntityExceptionHandler.html). 
-
 ### Caching
 
 Once published, news articles rarely change. It makes sense to cache them for improved performance.
