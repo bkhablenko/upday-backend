@@ -51,8 +51,8 @@ class ArticleControllerTest {
 
         @Test
         fun `should respond with 401 Unauthorized on missing Authorization`() {
-            val minimalJson = """{"title":"","description":"","body":"","tags":[],"authors":[]}"""
-            publishArticle(minimalJson).andExpect { status { isUnauthorized() } }
+            val json = """{"title":"","description":"","body":"","tags":[],"authors":["8GXEDszDwrWFqBqTYGaJup"]}"""
+            publishArticle(json).andExpect { status { isUnauthorized() } }
 
             verify(articleService, never()).createArticle(any())
         }
@@ -60,8 +60,8 @@ class ArticleControllerTest {
         @Test
         @WithMockUser(roles = ["USER"])
         fun `should respond with 403 Forbidden on insufficient access`() {
-            val minimalJson = """{"title":"","description":"","body":"","tags":[],"authors":[]}"""
-            publishArticle(minimalJson).andExpect { status { isForbidden() } }
+            val json = """{"title":"","description":"","body":"","tags":[],"authors":["8GXEDszDwrWFqBqTYGaJup"]}"""
+            publishArticle(json).andExpect { status { isForbidden() } }
 
             verify(articleService, never()).createArticle(any())
         }

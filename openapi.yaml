@@ -88,6 +88,7 @@ paths:
                       type: array
                       items:
                         $ref: '#/components/schemas/AuthorId'
+                      minItems: 1
               required:
                 - title
                 - description
@@ -148,6 +149,7 @@ paths:
                       type: array
                       items:
                         $ref: '#/components/schemas/AuthorId'
+                      minItems: 1
       responses:
         '200':
           description: OK
@@ -265,6 +267,7 @@ components:
           type: array
           items:
             type: string
+            pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
           example:
             - motorcycles
     ArticleItem:

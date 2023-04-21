@@ -9,6 +9,7 @@ import com.github.bkhablenko.upday.web.model.PublishArticleRequest
 import com.github.bkhablenko.upday.web.model.PublishArticleResponse
 import com.github.bkhablenko.upday.web.model.SearchArticlesRequestParams
 import com.github.bkhablenko.upday.web.model.SearchArticlesResponse
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -28,7 +29,7 @@ class ArticleController(private val articleService: ArticleService) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('EDITOR')")
-    fun publishArticle(@RequestBody payload: PublishArticleRequest): PublishArticleResponse {
+    fun publishArticle(@RequestBody @Valid payload: PublishArticleRequest): PublishArticleResponse {
         val article = articleService.createArticle(payload.toArticleModel())
 
         return PublishArticleResponse.of(article)
@@ -36,7 +37,10 @@ class ArticleController(private val articleService: ArticleService) {
 
     @PutMapping("/{articleId}")
     @PreAuthorize("hasRole('EDITOR')")
-    fun editArticle(@PathVariable articleId: Id, @RequestBody payload: EditArticleRequest): EditArticleResponse {
+    fun editArticle(
+        @PathVariable articleId: Id,
+        @RequestBody @Valid payload: EditArticleRequest,
+    ): EditArticleResponse {
         val article = articleService.updateArticle(articleId.value, payload.toArticleModel())
 
         return EditArticleResponse.of(article)
