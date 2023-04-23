@@ -16,6 +16,19 @@ services:
       jaeger:
         condition: service_started
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: root
+      KEYCLOAK_ADMIN_PASSWORD: password
+      KC_DB_POOL_MAX_SIZE: 15
+      KC_HEALTH_ENABLED: true
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    ports:
+      - "8080:8080"
+
   postgres:
     image: postgres:15.2-alpine
     environment:
